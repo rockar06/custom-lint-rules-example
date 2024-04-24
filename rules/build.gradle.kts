@@ -10,17 +10,10 @@ java {
 
 dependencies {
     compileOnly(libs.android.lint.api)
-    implementation(libs.kotlin.ext.date)
 }
 
 tasks.jar {
     manifest {
         attributes("Lint-Registry-v2" to "com.example.rules.registry.CustomIssueRegistry")
-    }
-
-    configurations["runtimeClasspath"].forEach {
-        from(zipTree(it.absoluteFile)) {
-            duplicatesStrategy = DuplicatesStrategy.INCLUDE
-        }
     }
 }
