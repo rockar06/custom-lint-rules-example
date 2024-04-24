@@ -6,9 +6,11 @@ import com.android.tools.lint.detector.api.Implementation
 import com.android.tools.lint.detector.api.Issue
 import com.android.tools.lint.detector.api.JavaContext
 import com.android.tools.lint.detector.api.Scope
-import com.android.tools.lint.detector.api.Severity
 import com.android.tools.lint.detector.api.SourceCodeScanner
+import com.example.rules.utils.DetectorExpiration
+import com.example.rules.utils.DetectorExpirationImpl
 import com.intellij.psi.PsiMethod
+import kotlinx.datetime.LocalDate
 import org.jetbrains.uast.UCallExpression
 
 class AndroidLogDetector : Detector(), SourceCodeScanner {
@@ -37,7 +39,10 @@ class AndroidLogDetector : Detector(), SourceCodeScanner {
         )
     }
 
-    companion object {
+    companion object : DetectorExpiration by DetectorExpirationImpl(
+        implementationDate = LocalDate(2024, 1, 1),
+        expirationDate = LocalDate(2024, 4, 30)
+    ) {
 
         private val IMPLEMENTATION = Implementation(
             AndroidLogDetector::class.java,
@@ -48,14 +53,14 @@ class AndroidLogDetector : Detector(), SourceCodeScanner {
             .create(
                 id = "AndroidLogDetector",
                 briefDescription = "The default android Log should not be used in the project",
-                explanation = """
-                    Leaving android Log statements in production can expose sensitive 
-                    information like passwords, API keys, or debug data. This can be a 
-                    security risk if the app is tampered with.
-                """.trimIndent(),
+                explanation = getDetectorExplanation(
+                    "Leaving android Log statements in production can expose sensitive " +
+                            "information like passwords, API keys, or debug data. This can be a " +
+                            "security risk if the app is tampered with."
+                ),
                 category = Category.SECURITY,
                 priority = 8,
-                severity = Severity.WARNING,
+                severity = detectorSeverity(),
                 androidSpecific = true,
                 implementation = IMPLEMENTATION
             )
