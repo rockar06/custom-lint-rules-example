@@ -21,4 +21,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "custom-lint-rules-example"
 include(":app")
- 
+include(":rules")
